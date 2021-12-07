@@ -7,7 +7,7 @@
 目前支持中英文，后续打算添加对多音词支持。
 
 ## 安装
-```
+```shell script
 go get -u github.com/usual2970/lad  
 ```
 
@@ -21,7 +21,7 @@ machine.Build()
 ```
 
 从文件中加载模式串，格式为一行一个词组
-```
+```golang
 machine := lad.New()
 if err := machine.Load("data path"); err != nil {
     t.Error(err)
@@ -30,23 +30,23 @@ machine.Build()
 ```
 
 匹配字符串
-```
+```golang
 machine.Match(text)
 ```
 
 查找字符串
-```
+```golang
 machine.Find(text)
 ```
 
 替换字符串
-```
+```golang
 machine.Replacee(text,target)
 ```
 
 ## 性能
 2017版macbook pro,2核8gb,1k个模式串，文本长度100个字符，benchmark结果如下。
-```
+```shell script
 goos: darwin
 goarch: amd64
 pkg: lad
