@@ -1,4 +1,5 @@
-# lad [![Build Status][ci-img]][ci]
+# 🪜 lad ![lad](https://github.com/usual2970/lad/actions/workflows/go.yml/badge.svg)
+
 一个敏感词过滤包，使用它你可以：
 * 判断文本中是否包含敏感词。
 * 查找文本中包含了哪些敏感词。
