@@ -3,29 +3,49 @@ package lad
 import "unicode"
 
 type token struct {
-	raw   string
-	input []rune
+	index  int
+	origin []rune
+	input  []rune
 }
 
 func newToken(raw string) *token {
 	return &token{
-		raw:   raw,
-		input: []rune(raw),
+		input:  []rune(raw),
+		origin: []rune(raw),
+		index:  -1,
 	}
 }
 
 func (t *token) next() string {
 	for unicode.IsSpace(t.current()) {
-		t.input = t.input[1:]
+		t.moveNext()
 	}
 
 	current := t.current()
 	if current == -1 {
 		return ""
 	}
-
-	t.input = t.input[1:]
+	t.moveNext()
 	return string(current)
+}
+
+func (t *token) moveNext() {
+	t.index++
+	t.input = t.input[1:]
+}
+
+func (t *token) prevNStr(index, preN int) string {
+	rs := make([]rune, 0)
+	for preN > 0 {
+		r := t.origin[index]
+		index--
+		rs = append([]rune{r}, rs...)
+		if unicode.IsSpace(r) {
+			continue
+		}
+		preN--
+	}
+	return string(rs)
 }
 
 func (t *token) current() rune {
