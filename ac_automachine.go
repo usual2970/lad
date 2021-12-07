@@ -41,7 +41,7 @@ type acMachine struct {
 	root *acNode
 }
 
-func newAcMachine() *acMachine {
+func New() *acMachine {
 	root := NewAcNode(rootRaw)
 	return &acMachine{
 		root: root,

@@ -5,7 +5,7 @@ import (
 )
 
 func TestAcMachine_Add(t *testing.T) {
-	machine := newAcMachine()
+	machine := New()
 	machine.Add("我们")
 	machine.Add("历史")
 	machine.Add("listen to me")
@@ -15,7 +15,7 @@ func TestAcMachine_Add(t *testing.T) {
 }
 
 func TestAcMachine_Load(t *testing.T) {
-	machine := newAcMachine()
+	machine := New()
 	if err := machine.Load("./test.data"); err != nil {
 		t.Error(err)
 	}
@@ -24,7 +24,7 @@ func TestAcMachine_Load(t *testing.T) {
 }
 
 func TestAcMachine_Build(t *testing.T) {
-	machine := newAcMachine()
+	machine := New()
 	if err := machine.Load("./test.data"); err != nil {
 		t.Error(err)
 	}
@@ -33,17 +33,17 @@ func TestAcMachine_Build(t *testing.T) {
 }
 
 func TestAcMachine_Find(t *testing.T) {
-	machine := newAcMachine()
+	machine := New()
 	if err := machine.Load("./test.data"); err != nil {
 		t.Error(err)
 	}
 	machine.Build()
 
-	t.Log(machine.Find("abx       cdadfadfadfadf"))
+	t.Log(machine.Find("ab       cdadfadfadfadf"))
 }
 
 func TestAcMachine_Match(t *testing.T) {
-	machine := newAcMachine()
+	machine := New()
 	if err := machine.Load("./test.data"); err != nil {
 		t.Error(err)
 	}
@@ -53,7 +53,7 @@ func TestAcMachine_Match(t *testing.T) {
 }
 
 func TestAcMachine_Replace(t *testing.T) {
-	machine := newAcMachine()
+	machine := New()
 	if err := machine.Load("./test.data"); err != nil {
 		t.Error(err)
 	}
