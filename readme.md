@@ -44,6 +44,19 @@ machine.Find(text)
 machine.Replacee(text,target)
 ```
 
+## 性能
+2017版macbook pro,2核8gb,1k个模式串，文本长度100个字符，benchmark结果如下。
+```
+goos: darwin
+goarch: amd64
+pkg: lad
+cpu: Intel(R) Core(TM) i5-7360U CPU @ 2.30GHz
+BenchmarkAcMachine_Find
+BenchmarkAcMachine_Find/find
+BenchmarkAcMachine_Find/find-4         	  322304	      3736 ns/op
+```
+
+
 ## Todos
 - [x] 添加模式串,构建ac自动机
 - [x] 从文件中加载模式串，构建ac自动机

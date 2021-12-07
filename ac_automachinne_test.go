@@ -39,7 +39,7 @@ func TestAcMachine_Find(t *testing.T) {
 	}
 	machine.Build()
 
-	t.Log(machine.Find("ab       cdadfadfadfadf"))
+	t.Log(machine.Find("ab    阿宾   cdadfadfadfadf"))
 }
 
 func TestAcMachine_Match(t *testing.T) {
@@ -49,7 +49,7 @@ func TestAcMachine_Match(t *testing.T) {
 	}
 	machine.Build()
 
-	t.Log(machine.Match("abx       cdadfadfadfadf"))
+	t.Log(machine.Match("abx     阿宾  cdadfadfadfadf"))
 }
 
 func TestAcMachine_Replace(t *testing.T) {
@@ -59,5 +59,21 @@ func TestAcMachine_Replace(t *testing.T) {
 	}
 	machine.Build()
 
-	t.Log(machine.Replace("ab       cdadfadfadfadf", "****"))
+	t.Log(machine.Replace("ab    阿宾   cdadfadfadfadf", "****"))
+}
+
+func BenchmarkAcMachine_Find(b *testing.B) {
+	machine := New()
+	if err := machine.Load("./test.data"); err != nil {
+		b.Error(err)
+	}
+	machine.Build()
+	b.Run("find", func(b *testing.B) {
+
+		b.RunParallel(func(pb *testing.PB) {
+			for pb.Next() {
+				machine.Find("cdadfadfadfadfab    阿宾   cdadfadfadfadf，俣哈萨克斯坦喝茶；罪域国；工；国；甘；adfa;dflklazdlfjaldf a:jfla工；期刊")
+			}
+		})
+	})
 }
