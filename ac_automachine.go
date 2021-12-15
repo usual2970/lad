@@ -139,7 +139,7 @@ func (ac *acMachine) Match(text string) bool {
 	return rs
 }
 
-// Match 匹配
+// Replace 替换
 func (ac *acMachine) Replace(text, target string) string {
 	rs := ""
 	ac.match(text, func(tok *token, node *acNode) {
