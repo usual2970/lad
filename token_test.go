@@ -1,9 +1,14 @@
 package lad
 
-import "testing"
+import (
+	"testing"
+	"unicode"
+
+	"github.com/mozillazg/go-pinyin"
+)
 
 func Test_token_next(t1 *testing.T) {
-	raw := "hello world 我们都有一个家"
+	raw := "ab    阿宾   cdadfadfadfad"
 	type fields struct {
 		input []rune
 	}
@@ -24,8 +29,17 @@ func Test_token_next(t1 *testing.T) {
 			t := newToken(string(tt.fields.input))
 
 			for rs := t.next(); rs != ""; rs = t.next() {
-				t1.Log(rs,t.index)
+				t1.Log(rs, t.index)
 			}
 		})
 	}
+}
+
+func TestPinyin(t *testing.T) {
+	hans := "重"
+	t.Log(unicode.Is(unicode.Han, []rune(hans)[0]))
+	// 默认
+	a := pinyin.NewArgs()
+	a.Heteronym = true
+	t.Log(pinyin.Pinyin(hans, a))
 }
