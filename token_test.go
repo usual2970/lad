@@ -61,11 +61,12 @@ func Test_token_nextPinyin(t1 *testing.T) {
 }
 
 func Test_token_buildGraph(t1 *testing.T) {
+
 	raw := "ab    啊中重   cdadfadfadfad"
 
 	t := newToken(raw)
 
 	graph := t.buildGraph()
 
-	graph.bfs()
+	graph.dfs()
 }

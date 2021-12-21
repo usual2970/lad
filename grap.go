@@ -65,6 +65,33 @@ func (tg *tokenGraph) bfs() {
 	}
 }
 
+func (tg *tokenGraph) dfs() {
+	l := make([]*node, 0)
+	visited := make(map[*node]struct{})
+	l = append(l, tg.start)
+	for len(l) > 0 {
+		n := l[len(l)-1]
+		l = l[0 : len(l)-1]
+
+		_, ok := tg.nodes[n]
+		if !ok {
+			continue
+		}
+
+		tn := tg.nodes[n].Front()
+		for tn != nil {
+			tnv := tn.Value.(*node)
+			if _, ok := visited[tnv]; !ok {
+				visited[tnv] = struct{}{}
+				fmt.Println(tnv.val)
+				l = append(l, n, tnv)
+				break
+			}
+			tn = tn.Next()
+		}
+	}
+}
+
 func (tg *tokenGraph) appendEdge(s *node, e ...*node) {
 	if _, ok := tg.nodes[s]; !ok {
 		tg.nodes[s] = list.New()

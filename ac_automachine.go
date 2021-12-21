@@ -17,18 +17,20 @@ type acNode struct {
 	children map[string]*acNode
 	isEnd    bool
 	length   int
+	deep     int
 	fail     *acNode
 }
 
-func NewAcNode(raw string) *acNode {
+func newAcNode(raw string, deep int) *acNode {
 	return &acNode{
 		raw:      raw,
 		children: make(map[string]*acNode),
+		deep:     deep,
 	}
 }
 
 func (an *acNode) view() {
-	fmt.Println(an.raw, ",", an.length, ",fail:", an.fail)
+	fmt.Println(an.raw, ",", an.deep, ",", an.length)
 	if len(an.children) == 0 {
 		return
 	}
@@ -42,7 +44,7 @@ type acMachine struct {
 }
 
 func New() *acMachine {
-	root := NewAcNode(rootRaw)
+	root := newAcNode(rootRaw, 0)
 	return &acMachine{
 		root: root,
 	}
@@ -53,13 +55,15 @@ func (ac *acMachine) Add(pattern string) {
 	p := ac.root
 	tok := newToken(pattern)
 	length := 0
+	deep := 1
 	for str := tok.next(); str != ""; str = tok.next() {
 		if _, ok := p.children[str]; !ok {
-			newNode := NewAcNode(str)
+			newNode := newAcNode(str, deep)
 			p.children[str] = newNode
 		}
 		p = p.children[str]
 		length++
+		deep++
 	}
 
 	p.length = length
@@ -154,6 +158,39 @@ func (ac *acMachine) Replace(text, target string) string {
 func (ac *acMachine) match(text string, fn func(tok *token, node *acNode)) {
 	p := ac.root
 	tok := newToken(text)
+	for {
+		str := tok.next()
+		if str == "" {
+			break
+		}
+		for {
+			if _, ok := p.children[str]; !ok && p != ac.root {
+				p = p.fail
+				continue
+			}
+			break
+		}
+
+		p = p.children[str]
+
+		if p == nil {
+			p = ac.root
+		}
+
+		tmp := p
+		for tmp != ac.root {
+			if tmp.isEnd {
+				fn(tok, tmp)
+			}
+			tmp = tmp.fail
+		}
+	}
+}
+
+func (ac *acMachine) matchPinyin(text string, fn func(tok *token, node *acNode)) {
+	tok := newToken(text)
+	// graph := tok.buildGraph()
+	p := ac.root
 	for {
 		str := tok.next()
 		if str == "" {
