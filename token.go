@@ -2,6 +2,8 @@ package lad
 
 import (
 	"unicode"
+
+	py "github.com/mozillazg/go-pinyin"
 )
 
 type token struct {
@@ -33,6 +35,46 @@ func (t *token) next() string {
 	}
 	t.moveNext()
 	return string(current)
+}
+
+func (t *token) nextPinyin() []string {
+	str := t.next()
+
+	if str == "" {
+		return nil
+	}
+
+	rs := []string{str}
+
+	r := []rune(str)[0]
+	if unicode.Is(unicode.Han, r) {
+		pys := pinyin(str)
+		rs = append(rs, pys...)
+	}
+
+	return rs
+}
+
+func (t *token) buildGraph() *tokenGraph {
+	rs := newTokenGraph()
+	lastNodes := []*node{rs.start}
+
+	for {
+		pys := t.nextPinyin()
+		if pys == nil {
+			break
+		}
+		nodes := make([]*node, len(pys))
+		for i, pinyin := range pys {
+			node := newGraphNode(pinyin)
+			nodes[i] = node
+		}
+		for _, lastNode := range lastNodes {
+			rs.appendEdge(lastNode, nodes...)
+		}
+		lastNodes = nodes
+	}
+	return rs
 }
 
 func (t *token) readWord() string {
@@ -91,4 +133,23 @@ func (t *token) getRuneAt(i int) rune {
 	}
 
 	return t.input[i]
+}
+
+func pinyin(str string) []string {
+	a := py.NewArgs()
+	a.Heteronym = true
+	pys := py.Pinyin(str, a)
+
+	rs := make([]string, 0)
+	m := map[string]struct{}{}
+
+	for _, item := range pys[0] {
+		if _, ok := m[item]; ok {
+			continue
+		}
+		m[item] = struct{}{}
+		rs = append(rs, item)
+	}
+
+	return rs
 }

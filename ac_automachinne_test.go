@@ -39,7 +39,7 @@ func TestAcMachine_Find(t *testing.T) {
 	}
 	machine.Build()
 
-	t.Log(machine.Find("ab    阿宾   cdadfadfadfadf"))
+	t.Log(machine.Find("行情"))
 }
 
 func TestAcMachine_Match(t *testing.T) {
